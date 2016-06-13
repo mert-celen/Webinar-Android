@@ -6,11 +6,19 @@
     android:layout_height="match_parent"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
-    tools:context="sau.mertcelen.webinarandroid.MainActivity">
+    tools:context="sau.mertcelen.webinarandroid.LiveStream">
 
-    <ListView
+    <VideoView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/currentList" />
+        android:id="@+id/presenterView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"/>
 
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/guestView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"/>
 </LinearLayout>
