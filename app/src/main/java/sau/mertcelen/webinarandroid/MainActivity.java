@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             JSONParser jParser = new JSONParser();
             // Getting JSON from URL
-            String json = jParser.getJSONFromUrl(_url);
+            String json = jParser.getJSONFromUrl(_url,false);
             return json;
         }
         @Override

@@ -4,8 +4,6 @@ package sau.mertcelen.webinarandroid;
  * Created by mertcelen on 13/06/16.
  */
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +12,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
@@ -28,14 +27,19 @@ public class JSONParser {
 
     }
 
-    public String getJSONFromUrl(String url) {
+    public String getJSONFromUrl(String url,boolean isPostReq) {
 
         // Making HTTP request
         try {
             // defaultHttpClient
             DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            HttpUriRequest httpRes = null;
+            if(isPostReq){
+                httpRes = new HttpPost(url);
+            }else{
+                httpRes = new HttpGet(url);
+            }
+            HttpResponse httpResponse = httpClient.execute(httpRes);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
             BufferedReader reader = new BufferedReader(new InputStreamReader(
