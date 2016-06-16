@@ -41,7 +41,8 @@
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="a@a.com" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +60,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textAutoComplete"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="a" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -73,7 +75,8 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="textAutoComplete"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="a" />
 
             <Button
                 android:id="@+id/email_sign_in_button"

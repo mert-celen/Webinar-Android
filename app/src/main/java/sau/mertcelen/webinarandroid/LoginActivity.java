@@ -291,14 +291,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 JSONObject obj = new JSONObject(parser.getJSONFromUrl(_url,false,null,null,null));
                 _guestStream = obj.getString("GuestStream");
                 _presenterStream = obj.getString("PresenterStream");
-                Log.i("mert","Guest Stream : \"" + _guestStream + "\"");
-                Log.i("mert","Presenter Stream : \"" + _presenterStream + "\"");
             }catch (Exception e){
                 e.printStackTrace();
             }
             return true;
         }
-
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if(true){
@@ -310,8 +307,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Toast.makeText(getApplicationContext(),"Connection Error!",Toast.LENGTH_SHORT).show();
             }
         }
-
     }
-
 }
 

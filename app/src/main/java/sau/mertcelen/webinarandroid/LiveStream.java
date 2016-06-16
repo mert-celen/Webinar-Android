@@ -1,11 +1,13 @@
 package sau.mertcelen.webinarandroid;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 import android.support.v4.app.Fragment;
@@ -67,9 +69,13 @@ public class LiveStream extends AppCompatActivity {
             if(type==1){
                 View rootView = inflater.inflate(R.layout.activity_stream_video, container, false);
                 String _eventID = String.valueOf(MainActivity._eventID);
-                String presenter = LoginActivity._presenterStream;
-                String guest = LoginActivity._guestStream;
+                String presenter = "rtsp://webinar.sakarya.edu.tr:1935/Webinar/" + LoginActivity._presenterStream + "_aac";
+                String guest = "rtsp://webinar.sakarya.edu.tr:1935/Webinar/" +  LoginActivity._guestStream + "_aac";
                 Log.i("mert","Event ID : " + _eventID);
+                Log.i("mert","Guest Stream : \"" + guest + "\"");
+                Log.i("mert","Presenter Stream : \"" + presenter + "\"");
+
+
                 presenterView = (VideoView) rootView.findViewById(R.id.presenterView);
                 presenterView.setVideoPath(presenter);
                 presenterView.requestFocus();
@@ -88,11 +94,22 @@ public class LiveStream extends AppCompatActivity {
 
                     }
                 });
-                thread1.start();
+
 
                 guestView = (VideoView)rootView.findViewById(R.id.guestView);
                 guestView.setVideoPath(guest);
                 guestView.requestFocus();
+
+
+//                //              Loading images
+//                guestView.setBackgroundResource(R.drawable.loading);
+//                presenterView.setBackgroundResource(R.drawable.loading);
+//                AnimationDrawable loadingAnimation = (AnimationDrawable)
+//                        guestView.getBackground();
+//                loadingAnimation.start();
+//                loadingAnimation =(AnimationDrawable)
+//                        presenterView.getBackground();
+//                loadingAnimation.start();
 
                 thread2=new Thread(new Runnable() {
 
@@ -105,17 +122,22 @@ public class LiveStream extends AppCompatActivity {
                         }
                     }
                 });
+                thread1.start();
                 thread2.start();
+
+                final TextView t = (TextView)rootView.findViewById(R.id.statusLabel);
 
 //              for disabling popup error
                 presenterView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                     @Override
                     public boolean onError(MediaPlayer mp, int what, int extra) {
                         if(presenterFlag){
-                            Toast.makeText(getContext(),"Presenter Not Available!",Toast.LENGTH_SHORT).show();
+                            t.setVisibility(View.VISIBLE);
+                            if(guestFlag){
+                                t.setText("Presenter/Guest Offline!");
+                            }
                             presenterFlag = false;
                         }
-
                         return true;
                     }
                 });
@@ -124,7 +146,10 @@ public class LiveStream extends AppCompatActivity {
                     @Override
                     public boolean onError(MediaPlayer mp, int what, int extra) {
                         if(guestFlag){
-                            Toast.makeText(getContext(),"Guest Not Available!",Toast.LENGTH_SHORT).show();
+                            t.setVisibility(View.VISIBLE);
+                            if(presenterFlag){
+                                t.setText("Presenter/Guest Offline!");
+                            }
                             guestFlag = false;
                         }
                         return true;
@@ -136,6 +161,7 @@ public class LiveStream extends AppCompatActivity {
                     public void onPrepared(MediaPlayer mp) {
                         presenterView.setBackgroundColor(0);
                         presenterView.setBackgroundResource(0);
+                        t.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -144,6 +170,7 @@ public class LiveStream extends AppCompatActivity {
                     public void onPrepared(MediaPlayer mp) {
                         guestView.setBackgroundColor(0);
                         guestView.setBackgroundResource(0);
+                        t.setVisibility(View.INVISIBLE);
                     }
                 });
                 return rootView;
