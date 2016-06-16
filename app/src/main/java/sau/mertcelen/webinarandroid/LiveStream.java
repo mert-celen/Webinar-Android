@@ -135,6 +135,7 @@ public class LiveStream extends AppCompatActivity {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         presenterView.setBackgroundColor(0);
+                        presenterView.setBackgroundResource(0);
                     }
                 });
 
@@ -142,6 +143,7 @@ public class LiveStream extends AppCompatActivity {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         guestView.setBackgroundColor(0);
+                        guestView.setBackgroundResource(0);
                     }
                 });
                 return rootView;
