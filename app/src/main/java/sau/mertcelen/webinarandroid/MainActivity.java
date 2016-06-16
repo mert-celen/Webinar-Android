@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public static int _eventID = -1;
     public static final String _url = "http://webinar.sakarya.edu.tr/api/WApi/List";
     private ArrayList<Webinar> list;
-    private ArrayList<String> deneme;
+    private ArrayList<String> names;
     boolean flag= true;
     private ArrayAdapter<String> arrayAdapter;
     @Override
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
-                deneme );
+                names );
 
         currentList.setAdapter(arrayAdapter);
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 _eventID = list.get(position).getId();
-                Intent intent = new Intent(MainActivity.this, LiveStream.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             list = new ArrayList<>();
-            deneme = new ArrayList<>();
+            names = new ArrayList<>();
             super.onPreExecute();
         }
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             JSONParser jParser = new JSONParser();
             // Getting JSON from URL
-            String json = jParser.getJSONFromUrl(_url,false);
+            String json = jParser.getJSONFromUrl(_url,false,null,null,null);
             return json;
         }
         @Override
@@ -94,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
                             startDate,startMessage,id,duration,maxUser,online,completed,started,isPublic,
                             enApplause,enMessage,enLobby));
 
-                    deneme.add(title);
+                    names.add(title);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.i("mert","Found " + deneme.size() + " events going on.");
-            Log.i("mert",deneme.toString());
+            Log.i("mert","Found " + names.size() + " events going on.");
+            Log.i("mert",names.toString());
             arrayAdapter.notifyDataSetChanged();
         }
     }

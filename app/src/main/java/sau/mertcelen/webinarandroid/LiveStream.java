@@ -1,14 +1,10 @@
 package sau.mertcelen.webinarandroid;
 
-import android.app.ActionBar;
-import android.app.Dialog;
 import android.media.MediaPlayer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -27,7 +23,6 @@ public class LiveStream extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private static boolean presenterFlag = true, guestFlag = true;
-    private int _code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +30,13 @@ public class LiveStream extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.live_stream);
 
-        // Create the adapter that will return a fragment for each of the three
+//      prevent starting activity without actually login. There won't be any problem without it but
+//       this prevents app from crash.
+        if(LoginActivity._code == null || LoginActivity._guestStream==null || LoginActivity._presenterStream==null){
+            finish();
+        }
+
+        // Create the adapter that will return a fragment for each of the two
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -66,11 +67,9 @@ public class LiveStream extends AppCompatActivity {
             if(type==1){
                 View rootView = inflater.inflate(R.layout.activity_stream_video, container, false);
                 String _eventID = String.valueOf(MainActivity._eventID);
-                String presenter = "rtsp://webinar.sakarya.edu.tr:1935/Webinar/"+ _eventID +"_presenter";
-                String guest = "rtsp://webinar.sakarya.edu.tr:1935/Webinar/" + _eventID + "_guest";
+                String presenter = LoginActivity._presenterStream;
+                String guest = LoginActivity._guestStream;
                 Log.i("mert","Event ID : " + _eventID);
-                Log.i("mert","Presenter URL : " + presenter);
-                Log.i("mert","Guest URL : " + guest);
                 presenterView = (VideoView) rootView.findViewById(R.id.presenterView);
                 presenterView.setVideoPath(presenter);
                 presenterView.requestFocus();
@@ -153,7 +152,9 @@ public class LiveStream extends AppCompatActivity {
                     w.clearCache(true);
                     w.clearHistory();
                     w.getSettings().setJavaScriptEnabled(true);
-                    w.loadUrl("http://webinarclient.sakarya.edu.tr/Live/WatcherMobile/6072?code=e26a6c6a-6206-4a3f-96db-f1b8ced26094");
+                    String chatUrl = "http://webinarclient.sakarya.edu.tr/Live/WatcherMobile/" + MainActivity._eventID + "?code=" + LoginActivity._code;
+                    w.loadUrl(chatUrl);
+                    Log.i("mert",chatUrl);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -163,7 +164,7 @@ public class LiveStream extends AppCompatActivity {
         }
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -179,4 +180,6 @@ public class LiveStream extends AppCompatActivity {
             return 2;
         }
     }
+
+
 }

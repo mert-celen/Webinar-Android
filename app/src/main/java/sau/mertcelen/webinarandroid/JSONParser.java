@@ -7,13 +7,17 @@ package sau.mertcelen.webinarandroid;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 public class JSONParser {
@@ -27,7 +31,7 @@ public class JSONParser {
 
     }
 
-    public String getJSONFromUrl(String url,boolean isPostReq) {
+    public String getJSONFromUrl(String url,boolean isPostReq,String email,String name,String surname) {
 
         // Making HTTP request
         try {
@@ -35,7 +39,18 @@ public class JSONParser {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpUriRequest httpRes = null;
             if(isPostReq){
+                ArrayList<NameValuePair> postParameters;
                 httpRes = new HttpPost(url);
+                HttpPost a = new HttpPost(url);
+                postParameters = new ArrayList<NameValuePair>();
+                postParameters.add(new BasicNameValuePair("WebinarId", String.valueOf(MainActivity._eventID)));
+                postParameters.add(new BasicNameValuePair("Email", email));
+                postParameters.add(new BasicNameValuePair("Name", name));
+                postParameters.add(new BasicNameValuePair("Surname", surname));
+//              dirty fix but works. (basically setEntity can't use of HttpUriRequest' inheritance for some reason?
+                a.setEntity(new UrlEncodedFormEntity(postParameters));
+                httpRes = a;
+                a= null;
             }else{
                 httpRes = new HttpGet(url);
             }
@@ -56,6 +71,5 @@ public class JSONParser {
         }
         // return JSON String
         return json;
-
     }
 }
